@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 
 class Membership(ABC):
@@ -29,5 +29,10 @@ class TriangularMembership(PiecewiseMembership):
 
 class TrapezoidalMembership(PiecewiseMembership):
     """ Defines membership function in a shape of a trapezoid. """
-    def __init__(self, val_min: float, val_mid_low: float, val_mid_high: float, val_max: float):
-        super().__init__([(val_min, 0.0), (val_mid_low, 1.0), (val_mid_high, 1.0), (val_max, 0.0)])
+    def __init__(self, val_min: Optional[float], val_mid_low: float, val_mid_high: float, val_max: Optional[float]):
+        points = [(val_mid_low, 1.0), (val_mid_high, 1.0)]
+        if val_min is not None:
+            points = [(val_min, 0.0)] + points
+        if val_max is not None:
+            points = points + [(val_max, 0.0)]
+        super().__init__(points)
