@@ -64,3 +64,13 @@ def test_complex(a, b):
     assert isinstance(exp._left, fl.AndExpression)
     assert isinstance(exp._right, fl.NotExpression)
     assert val_exp == max(min(val_a, val_b), 1 - val_a)
+
+
+def test_implication():
+    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+
+    impl = term_a >> term_b
+
+    assert isinstance(impl, fl.Rule)
+    assert impl == (term_a, term_b)

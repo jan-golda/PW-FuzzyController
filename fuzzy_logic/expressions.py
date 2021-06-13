@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import NamedTuple
+
+from fuzzy_logic import Membership
 
 
 class Expression(ABC):
@@ -23,6 +26,22 @@ class Expression(ABC):
         """ Overloads `|` operator so that you can express logical disjunction as `A | B`. """
         assert isinstance(other, Expression)
         return OrExpression(self, other)
+
+    def __rshift__(self, other: Term) -> Rule:
+        """ Overloads `>>` operator so that you can express logical implication as `A >> B`. """
+        assert isinstance(other, Term)
+        return Rule(self, other)
+
+
+class Term(Expression):
+    """ Represents a fuzzy term defined for a given membership function. """
+
+    def __init__(self, variable: str, membership: Membership):
+        self._variable = variable
+        self._membership = membership
+
+    def __call__(self, **inputs: float) -> float:
+        return self._membership(inputs[self._variable])
 
 
 class NotExpression(Expression):
@@ -52,3 +71,9 @@ class OrExpression(Expression):
 
     def __call__(self, **inputs: float) -> float:
         return max(self._left(**inputs), self._right(**inputs))
+
+
+class Rule(NamedTuple):
+    """ Represents a fuzzy logic rule. """
+    antecedent: Expression
+    consequent: Term
