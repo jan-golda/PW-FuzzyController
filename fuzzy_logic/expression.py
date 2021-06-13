@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 
@@ -8,16 +10,18 @@ class Expression(ABC):
     def __call__(self, **inputs: float) -> float:
         """ Evaluates the expression for given inputs. """
 
-    def __invert__(self) -> 'NotExpression':
+    def __invert__(self) -> NotExpression:
         """ Overloads `~` operator so that you can express logical negation as `~A`. """
         return NotExpression(self)
 
-    def __and__(self, other: 'Expression') -> 'AndExpression':
+    def __and__(self, other: Expression) -> AndExpression:
         """ Overloads `&` operator so that you can express logical conjunction as `A & B`. """
+        assert isinstance(other, Expression)
         return AndExpression(self, other)
 
-    def __or__(self, other: 'Expression') -> 'OrExpression':
+    def __or__(self, other: Expression) -> OrExpression:
         """ Overloads `|` operator so that you can express logical disjunction as `A | B`. """
+        assert isinstance(other, Expression)
         return OrExpression(self, other)
 
 
