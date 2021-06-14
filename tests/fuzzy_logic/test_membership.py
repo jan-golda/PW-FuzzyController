@@ -1,4 +1,28 @@
+import pytest
+
 import fuzzy_logic as fl
+PIECEWISE_IDS = [
+    'rectangle',
+    'right triangle - right',
+    'right triangle - left',
+    'triangle',
+    'right trapezoid - right',
+    'right trapezoid - left',
+    'trapezoid',
+    'complex'
+]
+PIECEWISE_MASSES = [1, 1/2, 1/2, 3/2, 3/2, 3/2, 7/2, 19/4]
+PIECEWISE_CENTERS = [1, 4/3, 2/3, 5/3, 22/9, 14/9, 57/21, 176/57]
+PIECEWISE_SHAPES = [
+    [(0.0, 0.5), (2.0, 0.5)],
+    [(0.0, 0.0), (2.0, 0.5)],
+    [(0.0, 0.5), (2.0, 0.0)],
+    [(0.0, 0.0), (2.0, 1.0), (3.0, 0.0)],
+    [(0.0, 0.0), (2.0, 0.5), (4.0, 0.5)],
+    [(0.0, 0.5), (2.0, 0.5), (4.0, 0.0)],
+    [(0.0, 0.0), (2.0, 1.0), (4.0, 1.0), (5.0, 0.0)],
+    [(0.0, 1.0), (1.0, 1.0), (2.0, 0.5), (3.0, 0.5), (5.0, 1.0), (7.0, 0.0)]
+]
 
 
 def test_piecewise_2_points():
@@ -23,6 +47,24 @@ def test_piecewise_3_points():
 
     for x, y in expected:
         assert membership(x) == y
+
+
+@pytest.mark.parametrize(
+    argnames=['points', 'center'],
+    argvalues=list(zip(PIECEWISE_SHAPES, PIECEWISE_CENTERS)),
+    ids=PIECEWISE_IDS
+)
+def test_piecewise_center(points, center):
+    assert fl.PiecewiseMembership(points).center == pytest.approx(center)
+
+
+@pytest.mark.parametrize(
+    argnames=['points', 'mass'],
+    argvalues=list(zip(PIECEWISE_SHAPES, PIECEWISE_MASSES)),
+    ids=PIECEWISE_IDS
+)
+def test_piecewise_mass(points, mass):
+    assert fl.PiecewiseMembership(points).mass == pytest.approx(mass)
 
 
 def test_triangular():
