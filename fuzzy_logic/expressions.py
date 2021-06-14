@@ -43,6 +43,14 @@ class Term(Expression):
     def __call__(self, **inputs: float) -> float:
         return self._membership(inputs[self._variable])
 
+    @property
+    def variable(self) -> str:
+        return self._variable
+
+    @property
+    def membership(self) -> Membership:
+        return self._membership
+
 
 class NotExpression(Expression):
     """ Represents a logical negation. """
