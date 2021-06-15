@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import NamedTuple
+from typing import NamedTuple, Set
+
+from matplotlib.patches import Patch
 
 from fuzzy_logic import Membership
 
@@ -32,6 +34,11 @@ class Expression(ABC):
         assert isinstance(other, Term)
         return Rule(self, other)
 
+    @property
+    @abstractmethod
+    def terms(self) -> Set[Term]:
+        """ Terms used in this expression. """
+
 
 class Term(Expression):
     """ Represents a fuzzy term defined for a given membership function. """
@@ -56,32 +63,51 @@ class Term(Expression):
     def membership(self) -> Membership:
         return self._membership
 
+    @property
+    def terms(self) -> Set[Term]:
+        return {self}
 
-class NotExpression(Expression):
-    """ Represents a logical negation. """
+    @property
+    def plt_patch(self) -> Patch:
+        """ Matplotlib patch in a shape of this var membership function. """
+        patch = self.membership.plt_patch
+        patch.set_label(self.label)
+        return patch
+
+
+class UnaryExpression(Expression, ABC):
     def __init__(self, expr: Expression):
         self._expr = expr
 
+    @property
+    def terms(self) -> Set[Term]:
+        return self._expr.terms
+
+
+class BinaryExpression(Expression, ABC):
+    def __init__(self, left: Expression, right: Expression):
+        self._left = left
+        self._right = right
+
+    @property
+    def terms(self) -> Set[Term]:
+        return self._left.terms | self._right.terms
+
+
+class NotExpression(UnaryExpression):
+    """ Represents a logical negation. """
     def __call__(self, **inputs: float) -> float:
         return 1 - self._expr(**inputs)
 
 
-class AndExpression(Expression):
+class AndExpression(BinaryExpression):
     """ Represents a logical conjunction. """
-    def __init__(self, left: Expression, right: Expression):
-        self._left = left
-        self._right = right
-
     def __call__(self, **inputs: float) -> float:
         return min(self._left(**inputs), self._right(**inputs))
 
 
-class OrExpression(Expression):
+class OrExpression(BinaryExpression):
     """ Represents a logical disjunction. """
-    def __init__(self, left: Expression, right: Expression):
-        self._left = left
-        self._right = right
-
     def __call__(self, **inputs: float) -> float:
         return max(self._left(**inputs), self._right(**inputs))
 

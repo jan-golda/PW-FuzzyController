@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple, Optional
 
+from matplotlib.patches import Patch, Polygon
+
 
 class Membership(ABC):
 
@@ -17,6 +19,11 @@ class Membership(ABC):
     @abstractmethod
     def mass(self) -> float:
         """ Mass of the area under this membership function. """
+
+    @property
+    @abstractmethod
+    def plt_patch(self) -> Patch:
+        """ Matplotlib patch in a shape of this membership function. """
 
 
 class PiecewiseMembership(Membership):
@@ -56,6 +63,12 @@ class PiecewiseMembership(Membership):
         """ Mass of the i-th segment. """
         p1, p2 = self._points[i:i+2]
         return (p1[1] + p2[1]) / 2.0 * (p2[0] - p1[0])
+
+    @property
+    def plt_patch(self) -> Polygon:
+        return Polygon(
+            [(self._points[0][0], 0.0)] + self._points + [(self._points[-1][0], 0.0)]
+        )
 
 
 class TriangularMembership(PiecewiseMembership):
