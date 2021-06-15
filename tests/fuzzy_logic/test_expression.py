@@ -5,7 +5,7 @@ import fuzzy_logic as fl
 
 @pytest.mark.parametrize('a', [0.0, 0.4, 1.0])
 def test_not(a):
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
 
     exp = ~term_a
 
@@ -19,8 +19,8 @@ def test_not(a):
 @pytest.mark.parametrize('a', [0.0, 0.4, 1.0])
 @pytest.mark.parametrize('b', [0.0, 0.4, 1.0])
 def test_or(a, b):
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     exp = term_a | term_b
 
@@ -35,8 +35,8 @@ def test_or(a, b):
 @pytest.mark.parametrize('a', [0.0, 0.4, 1.0])
 @pytest.mark.parametrize('b', [0.0, 0.4, 1.0])
 def test_and(a, b):
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     exp = term_a & term_b
 
@@ -51,8 +51,8 @@ def test_and(a, b):
 @pytest.mark.parametrize('a', [0.0, 0.4, 1.0])
 @pytest.mark.parametrize('b', [0.0, 0.4, 1.0])
 def test_complex(a, b):
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     exp = (term_a & term_b) | ~term_a
 
@@ -67,8 +67,8 @@ def test_complex(a, b):
 
 
 def test_implication():
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     impl = term_a >> term_b
 

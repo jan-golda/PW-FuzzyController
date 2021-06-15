@@ -36,8 +36,9 @@ class Expression(ABC):
 class Term(Expression):
     """ Represents a fuzzy term defined for a given membership function. """
 
-    def __init__(self, variable: str, membership: Membership):
+    def __init__(self, variable: str, label: str, membership: Membership):
         self._variable = variable
+        self._label = label
         self._membership = membership
 
     def __call__(self, **inputs: float) -> float:
@@ -46,6 +47,10 @@ class Term(Expression):
     @property
     def variable(self) -> str:
         return self._variable
+
+    @property
+    def label(self) -> str:
+        return self._label
 
     @property
     def membership(self) -> Membership:

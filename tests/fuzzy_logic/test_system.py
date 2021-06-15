@@ -3,8 +3,8 @@ from fuzzy_logic.system import cleanup_rules, group_rules
 
 
 def test_cleanup_rules():
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     rules = list(cleanup_rules([
         term_a >> term_b,
@@ -24,8 +24,8 @@ def test_cleanup_rules():
 
 
 def test_group_rules():
-    term_a = fl.Term('a', fl.TriangularMembership(0, 1, 2))
-    term_b = fl.Term('b', fl.TriangularMembership(0, 1, 2))
+    term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
+    term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
     groups = group_rules([
         term_a >> term_b,
