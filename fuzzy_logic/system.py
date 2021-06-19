@@ -69,13 +69,13 @@ class System:
 
         cmap = matplotlib.cm.get_cmap('tab10')
         for ax, (variable, terms) in zip(axs, variables):
-            for i, term in enumerate(terms):
+            for i, term in enumerate(sorted(terms, key=lambda t: t.membership.center)):
                 patch = term.plt_patch
                 patch.set_alpha(0.4)
                 patch.set_color(cmap(i))
                 ax.add_patch(patch)
 
-            ax.set_title(variable)
+            ax.set_title(variable.replace('_', ' '))
             ax.set_yticks([])
             ax.legend(loc='upper right')
             ax.spines["top"].set_visible(False)
