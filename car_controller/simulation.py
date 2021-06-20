@@ -32,7 +32,7 @@ class CarSimulation:
         self._car_accelerations.append(self.current_car_acceleration)
 
         self._obstacle_speeds.append(self.current_obstacle_speed + self.current_obstacle_acceleration * time_step)
-        self._obstacle_positions.append(self.current_obstacle_position + sum(self._obstacle_speeds[-1:]) / 2 * time_step)
+        self._obstacle_positions.append(self.current_obstacle_position + sum(self._obstacle_speeds[-2:]) / 2 * time_step)
         self._obstacle_accelerations.append(self.current_obstacle_acceleration)
 
     def simulate(self, car_controller: CarController, obstacle_acceleration: Union[float, Callable[[float], float]],
