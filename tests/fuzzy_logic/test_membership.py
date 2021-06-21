@@ -1,6 +1,8 @@
 import pytest
 
 import fuzzy_logic as fl
+
+# test cases for the tests of piecewise membership function
 PIECEWISE_IDS = [
     'rectangle',
     'right triangle - right',
@@ -26,6 +28,7 @@ PIECEWISE_SHAPES = [
 
 
 def test_piecewise_2_points():
+    """ Tests a interpolation of a two-points piecewise membership function. """
     membership = fl.PiecewiseMembership([(0.0, 1.0), (1.0, 0.5)])
     expected = [
         (-10.0, 0.0), (1.1, 0.0),  # outside
@@ -38,6 +41,7 @@ def test_piecewise_2_points():
 
 
 def test_piecewise_3_points():
+    """ Tests a interpolation of a three-points piecewise membership function. """
     membership = fl.PiecewiseMembership([(0.0, 1.0), (1.0, 0.5), (1.5, 1.0)])
     expected = [
         (-10.0, 0.0), (1.6, 0.0),  # outside
@@ -55,6 +59,7 @@ def test_piecewise_3_points():
     ids=PIECEWISE_IDS
 )
 def test_piecewise_center(points, center):
+    """ Tests the center-of-mass calculation of a piecewise membership function. """
     assert fl.PiecewiseMembership(points).center == pytest.approx(center)
 
 
@@ -64,10 +69,12 @@ def test_piecewise_center(points, center):
     ids=PIECEWISE_IDS
 )
 def test_piecewise_mass(points, mass):
+    """ Tests the mass calculation for a piecewise membership function. """
     assert fl.PiecewiseMembership(points).mass == pytest.approx(mass)
 
 
 def test_triangular():
+    """ Tests the membership function in a form of a triangle. """
     membership = fl.TriangularMembership(0.0, 2.0, 3.0)
     expected = [
         (-10.0, 0.0), (3.1, 0.0),  # outside
@@ -80,6 +87,7 @@ def test_triangular():
 
 
 def test_trapezoidal():
+    """ Tests the membership function in a form of a (not right) trapezoidal. """
     membership = fl.TrapezoidalMembership(0.0, 2.0, 3.0, 4.0)
     expected = [
         (-10.0, 0.0), (4.1, 0.0),  # outside
@@ -92,6 +100,7 @@ def test_trapezoidal():
 
 
 def test_trapezoidal_left():
+    """ Tests the membership function in a form of a right trapezoidal with right angle at lower x-coordinates. """
     membership = fl.TrapezoidalMembership(None, 2.0, 3.0, 4.0)
     expected = [
         (1.9, 0.0), (4.1, 0.0),  # outside
@@ -104,6 +113,7 @@ def test_trapezoidal_left():
 
 
 def test_trapezoidal_right():
+    """ Tests the membership function in a form of a right trapezoidal with right angle at higher x-coordinates. """
     membership = fl.TrapezoidalMembership(1.0, 2.0, 3.0, None)
     expected = [
         (0.9, 0.0), (3.1, 0.0),  # outside
@@ -116,6 +126,7 @@ def test_trapezoidal_right():
 
 
 def test_trapezoidal_rectangle():
+    """ Tests the membership function in a form of a rectangle. """
     membership = fl.TrapezoidalMembership(None, 2.0, 3.0, None)
     expected = [
         (1.9, 0.0), (3.1, 0.0),  # outside

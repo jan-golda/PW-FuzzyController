@@ -76,6 +76,7 @@ class Term(Expression):
 
 
 class UnaryExpression(Expression, ABC):
+    """ Base class for all unary expressions. """
     def __init__(self, expr: Expression):
         self._expr = expr
 
@@ -85,6 +86,7 @@ class UnaryExpression(Expression, ABC):
 
 
 class BinaryExpression(Expression, ABC):
+    """ Base class for all binary expressions. """
     def __init__(self, left: Expression, right: Expression):
         self._left = left
         self._right = right

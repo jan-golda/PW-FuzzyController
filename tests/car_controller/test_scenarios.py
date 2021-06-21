@@ -1,3 +1,4 @@
+""" Tests of the car controller in different situations. """
 import itertools
 
 import pytest
@@ -8,6 +9,10 @@ from car_controller import CarController, CarSimulation
 @pytest.mark.parametrize('initial_speed', [7.0, 14.0, 21.0, 28.0])
 @pytest.mark.parametrize('deceleration', [10.0, 20.0, 30.0])
 def test_obstacle_emergency_breaking(initial_speed, deceleration):
+    """
+    Tests a situation when both car and obstacle are moving at a constant speed
+    with 35m between them and then the obstacle breaks to 0.
+    """
     car_controller = CarController()
     simulation = CarSimulation(
         initial_car_speed=initial_speed,
@@ -30,6 +35,10 @@ def test_obstacle_emergency_breaking(initial_speed, deceleration):
 @pytest.mark.parametrize('car_speed', [7.0, 14.0, 21.0, 28.0])
 @pytest.mark.parametrize('obstacle_speed', [7.0, 14.0, 21.0, 28.0])
 def test_obstacle_constant_speed(car_speed, obstacle_speed):
+    """
+    Tests the situation when a obstacle is moving at a constant speed and the
+    car has to adapt to it.
+    """
     car_controller = CarController()
     simulation = CarSimulation(
         initial_car_speed=car_speed,
@@ -48,6 +57,10 @@ def test_obstacle_constant_speed(car_speed, obstacle_speed):
 @pytest.mark.parametrize('initial_speed,target_speed', list(itertools.permutations([7.0, 14.0, 21.0, 28.0], 2)))
 @pytest.mark.parametrize('acceleration', [2.5, 5.0, 10.0, 15.0])
 def test_obstacle_speed_change(initial_speed, target_speed, acceleration):
+    """
+    Tests a situation when both car and obstacle are moving at a constant speed
+    with 35m between them and then the obstacle speed changes.
+    """
     car_controller = CarController()
     simulation = CarSimulation(
         initial_car_speed=initial_speed,
@@ -70,6 +83,10 @@ def test_obstacle_speed_change(initial_speed, target_speed, acceleration):
 @pytest.mark.parametrize('car_speed', [7.0, 14.0, 21.0, 28.0])
 @pytest.mark.parametrize('obstacle_position', [35.0, 50.0, 100.0, 150.0, 200.0])
 def test_obstacle_static(car_speed, obstacle_position):
+    """
+    Tests a situation when the obstacle stands still and the car needs to
+    brake to stop.
+    """
     car_controller = CarController()
     simulation = CarSimulation(
         initial_car_speed=car_speed,
@@ -88,6 +105,10 @@ def test_obstacle_static(car_speed, obstacle_position):
 @pytest.mark.parametrize('obstacle_position', [35.0, 50.0, 100.0])
 @pytest.mark.parametrize('acceleration', [2.5, 5.0, 10.0, 15.0])
 def test_obstacle_start(target_speed, obstacle_position, acceleration):
+    """
+    Tests a situation when both car and obstacle are standing still and then the
+    obstacle moves and the car needs to follow it.
+    """
     car_controller = CarController()
     simulation = CarSimulation(
         initial_car_speed=0.0,
@@ -108,6 +129,10 @@ def test_obstacle_start(target_speed, obstacle_position, acceleration):
 
 
 def test_traffic_jam():
+    """
+    Tests the situation when the car and obstacle are moving in a "traffic jam"
+    which consists of frequent, small changes in the speed.
+    """
     TIMES = [1, 3, 5, 6, 8, 10, 12, 14, 16, 20, 21, 22, 23, 25]
     ACCELERATIONS = [0.0, 2.0, 0.0, -4.0, 0.0, 4.0, 0.0, 2.0, -6.0, 0.0, 2.0, 0.0, 2.0, 0.0]
 

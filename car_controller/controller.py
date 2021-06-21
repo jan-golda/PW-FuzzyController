@@ -2,9 +2,10 @@ import fuzzy_logic as fl
 
 
 class CarController:
-    """ Implements the logic of a controlelr that controlle vehicle acceleration. """
+    """ Implements the logic of a controller that controls vehicle acceleration. """
 
     def __init__(self):
+        """ Sets up the fuzzy logic system. """
 
         speed_low = fl.Term('car_speed', 'low', fl.TrapezoidalMembership(None, 0, 10.0, 12.0))
         speed_target = fl.Term('car_speed', 'target', fl.TrapezoidalMembership(10.0, 12.0, 14.0, 16.0))
@@ -35,6 +36,7 @@ class CarController:
         )
 
     def __call__(self, car_speed: float, obstacle_distance: float, obstacle_relative_speed: float) -> float:
+        """ Calculates the requested acceleration of a car based on the given variables. """
         return self._system(
             car_speed=car_speed,
             obstacle_distance=obstacle_distance,

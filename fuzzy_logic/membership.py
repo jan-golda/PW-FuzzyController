@@ -5,6 +5,7 @@ from matplotlib.patches import Patch, Polygon
 
 
 class Membership(ABC):
+    """ Interface for all membership functions. """
 
     @abstractmethod
     def __call__(self, value: float) -> float:

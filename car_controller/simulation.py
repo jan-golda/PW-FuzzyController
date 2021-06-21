@@ -6,6 +6,7 @@ from car_controller import CarController
 
 
 class CarSimulation:
+    """ Class responsible for simulating a simplified world in which the car controller can be tested. """
 
     def __init__(self,
                  initial_car_position: float = 0.0,
@@ -53,6 +54,7 @@ class CarSimulation:
             self.step(time_step)
 
     def plot(self, title: str = '', accelerations_limits: Tuple[float, float] = (-30, 30), speed_limits: Tuple[float, float] = (-1, 40)):
+        """ Displays the history of the simulation in a form of three plots (position, speed, acceleration). """
         fig, axs = plt.subplots(nrows=3)
 
         axs[0].set_ylabel(r'position $\left[m\right]$')

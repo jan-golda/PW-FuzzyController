@@ -3,6 +3,7 @@ from fuzzy_logic.system import cleanup_rules, group_rules
 
 
 def test_cleanup_rules():
+    """ Tests the cleanup_rules() function which merges the rules with the same consequent. """
     term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
     term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 
@@ -24,6 +25,7 @@ def test_cleanup_rules():
 
 
 def test_group_rules():
+    """ Tests the group_rules() function which groups the rules with the same consequent variable. """
     term_a = fl.Term('a', 'A', fl.TriangularMembership(0, 1, 2))
     term_b = fl.Term('b', 'B', fl.TriangularMembership(0, 1, 2))
 

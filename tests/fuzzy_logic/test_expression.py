@@ -1,3 +1,4 @@
+""" Unit tests of the expression system. """
 import pytest as pytest
 
 import fuzzy_logic as fl
