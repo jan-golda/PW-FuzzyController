@@ -3,8 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import NamedTuple, Set
 
-from matplotlib.patches import Patch
-
 from fuzzy_logic import Membership
 
 
@@ -68,7 +66,7 @@ class Term(Expression):
         return {self}
 
     @property
-    def plt_patch(self) -> Patch:
+    def plt_patch(self):
         """ Matplotlib patch in a shape of this var membership function. """
         patch = self.membership.plt_patch
         patch.set_label(self.label)

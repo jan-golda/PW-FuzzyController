@@ -1,7 +1,5 @@
 from typing import Union, Callable, Tuple
 
-import matplotlib.pyplot as plt
-
 from car_controller import CarController
 
 
@@ -55,6 +53,8 @@ class CarSimulation:
 
     def plot(self, title: str = '', accelerations_limits: Tuple[float, float] = (-30, 30), speed_limits: Tuple[float, float] = (-1, 40)):
         """ Displays the history of the simulation in a form of three plots (position, speed, acceleration). """
+        import matplotlib.pyplot as plt
+
         fig, axs = plt.subplots(nrows=3)
 
         axs[0].set_ylabel(r'position $\left[m\right]$')

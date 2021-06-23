@@ -3,9 +3,6 @@ import itertools
 import operator
 from typing import Iterable, Dict, List
 
-import matplotlib
-import matplotlib.pyplot as plt
-
 from fuzzy_logic import Rule
 
 
@@ -53,6 +50,9 @@ class System:
 
     def plot(self):
         """ Plot the membership graphs of this system. """
+        import matplotlib
+        import matplotlib.pyplot as plt
+
         inputs = set().union(*(r.antecedent.terms for r in itertools.chain.from_iterable(self._rules.values())))
         inputs = sorted(inputs, key=lambda t: t.variable)
         inputs = itertools.groupby(inputs, key=lambda t: t.variable)
