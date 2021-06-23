@@ -12,6 +12,15 @@ def parse_arguments():
     parser.add_argument('-o', '--output', metavar='FILE', type=argparse.FileType('w'), help='write the simulation logs to a file')
     parser.add_argument('-p', '--plot-simulation', action='store_true', help='[requires matplotlib] show a plot of the simulation results')
     parser.add_argument('-m', '--plot-membership', action='store_true', help='[requires matplotlib] show a plot of the membership functions')
+    parser.add_argument('--distance-target', default=35.0, type=float, help='optimal distance to maintain between the car and obstacle')
+    parser.add_argument('--distance-fuzzy', default=10.0, type=float, help='decides how precise the target distance is')
+    parser.add_argument('--distance-max', default=200.0, type=float, help='max distance to between the car and obstacle')
+    parser.add_argument('--speed-target', default=13.0, type=float, help='optimal speed of the car')
+    parser.add_argument('--speed-fuzzy', default=3.0, type=float, help='decides how precise the target speed is')
+    parser.add_argument('--speed-max', default=40.0, type=float, help='max speed of the car and obstacle')
+    parser.add_argument('--acceleration-max', default=30.0, type=float, help='maximum acceleration of the car')
+    parser.add_argument('--deceleration-max', default=30.0, type=float, help='maximum deceleration of the car')
+    parser.add_argument('--acceleration-maintain_fuzzy', default=5.0, type=float, help='decides how precise the acceleration maintenance is')
 
     scenario_subparsers = parser.add_subparsers(dest='scenario', title='Available scenarios', help='scenario for which to run the simulation')
 
@@ -43,7 +52,17 @@ def parse_arguments():
 
 def create_controller(args: argparse.Namespace):
     """ Configures the car controller based on the arguments. """
-    return CarController()
+    return CarController(
+        distance_target=args.distance_target,
+        distance_max=args.distance_max,
+        distance_fuzzy=args.distance_fuzzy,
+        speed_target=args.speed_target,
+        speed_fuzzy=args.speed_fuzzy,
+        speed_max=args.speed_max,
+        acceleration_max=args.acceleration_max,
+        deceleration_max=args.deceleration_max,
+        acceleration_maintain_fuzzy=args.acceleration_maintain_fuzzy
+    )
 
 
 def run_manually(car_controller: CarController):
