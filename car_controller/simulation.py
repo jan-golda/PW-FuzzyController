@@ -123,3 +123,18 @@ class CarSimulation:
     @property
     def current_simulation_time(self):
         return self._simulation_times[-1]
+
+    def __iter__(self):
+        """ Iterator over the simulation history. """
+        for i in range(len(self._simulation_times)):
+            yield {
+                'time': self._simulation_times[i],
+                'car_position': self._car_positions[i],
+                'car_speed': self._car_speeds[i],
+                'car_acceleration': self._car_accelerations[i],
+                'obstacle_position': self._obstacle_positions[i],
+                'obstacle_speed': self._obstacle_speeds[i],
+                'obstacle_acceleration': self._obstacle_accelerations[i],
+                'relative_distance': self._obstacle_positions[i] - self._car_positions[i],
+                'relative_speed': self._obstacle_speeds[i] - self._car_speeds[i]
+            }
