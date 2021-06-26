@@ -1,31 +1,56 @@
 import fuzzy_logic as fl
 
+# default membership functions
+DEFAULT_MEMBERSHIPS = {
+  "car_speed": {
+    "low": [(0, 1.0), (10.0, 1.0), (13.0, 0.0)],
+    "target": [(10.0, 0.0), (13.0, 1.0), (16.0, 0.0)],
+    "high": [(13.0, 0.0), (16.0, 1.0), (40.0, 1.0)]
+  },
+  "obstacle_distance": {
+    "near": [(0.0, 1.0), (25.0, 1.0), (35.0, 0.0)],
+    "target": [(25.0, 0.0), (35.0, 1.0), (45.0, 0.0)],
+    "far": [(35.0, 0.0), (45.0, 1.0), (200.0, 1.0)]
+  },
+  "obstacle_relative_speed": {
+    "approaching": [(-40.0, 1.0), (-20.0, 1.0), (-0.0, 0.0)],
+    "constant": [(-20.0, 0.0), (0.0, 1.0), (20.0, 0.0)],
+    "moving_away": [(0.0, 0.0), (20.0, 1.0), (40.0, 1.0)]
+  },
+  "car_acceleration": {
+    "break_hard": [(-30.0, 1.0), (-20.0, 1.0), (-10.0, 0.0)],
+    "break": [(-20.0, 0.0), (-10.0, 1.0), (-5.0, 1.0), (0.0, 0.0)],
+    "maintain": [(-5.0, 0.0), (0.0, 1.0), (5.0, 0.0)],
+    "accelerate": [(0.0, 0.0), (5.0, 1.0), (10.0, 1.0), (20.0, 0.0)],
+    "accelerate_hard": [(10.0, 0.0), (20.0, 1.0), (30.0, 1.0)]
+  }
+}
+
 
 class CarController:
     """ Implements the logic of a controller that controls vehicle acceleration. """
 
-    def __init__(self, distance_target: float = 35.0, distance_max: float = 200.0, distance_fuzzy: float = 10.0,
-                 speed_target: float = 13.0, speed_fuzzy: float = 3.0, speed_max: float = 40.0,
-                 acceleration_max: float = 30.0, deceleration_max: float = 30.0, acceleration_maintain_fuzzy: float = 5.0):
+    def __init__(self, membership_points=DEFAULT_MEMBERSHIPS):
         """ Sets up the fuzzy logic system. """
 
-        car_slow = fl.Term('car_speed', 'low', fl.TrapezoidalMembership(None, 0, speed_target - speed_fuzzy, speed_target))
-        car_target = fl.Term('car_speed', 'target', fl.TriangularMembership(speed_target - speed_fuzzy, speed_target, speed_target + speed_fuzzy))
-        car_fast = fl.Term('car_speed', 'high', fl.TrapezoidalMembership(speed_target, speed_target + speed_fuzzy, 40.0, None))
+        # car speed turned out to e redundant - the final system does not use it
+        car_slow = fl.Term('car_speed', 'low', fl.PiecewiseMembership(membership_points['car_speed']['low']))
+        car_target = fl.Term('car_speed', 'target', fl.PiecewiseMembership(membership_points['car_speed']['target']))
+        car_fast = fl.Term('car_speed', 'high', fl.PiecewiseMembership(membership_points['car_speed']['high']))
 
-        obstacle_near = fl.Term('obstacle_distance', 'near', fl.TrapezoidalMembership(None, 0.0, distance_target - distance_fuzzy, distance_target))
-        obstacle_target = fl.Term('obstacle_distance', 'target', fl.TriangularMembership(distance_target - distance_fuzzy, distance_target, distance_target + distance_fuzzy))
-        obstacle_far = fl.Term('obstacle_distance', 'far', fl.TrapezoidalMembership(distance_target, distance_target + distance_fuzzy, distance_max, None))
+        obstacle_near = fl.Term('obstacle_distance', 'near', fl.PiecewiseMembership(membership_points['obstacle_distance']['near']))
+        obstacle_target = fl.Term('obstacle_distance', 'target', fl.PiecewiseMembership(membership_points['obstacle_distance']['target']))
+        obstacle_far = fl.Term('obstacle_distance', 'far', fl.PiecewiseMembership(membership_points['obstacle_distance']['far']))
 
-        obstacle_approaching = fl.Term('obstacle_relative_speed', 'approaching', fl.TrapezoidalMembership(None, -speed_max, -speed_max / 2, -0.0))
-        obstacle_static = fl.Term('obstacle_relative_speed', 'constant', fl.TriangularMembership(-speed_max / 2, 0.0, speed_max / 2))
-        obstacle_moving_away = fl.Term('obstacle_relative_speed', 'moving_away', fl.TrapezoidalMembership(0.0, speed_max / 2, speed_max, None))
+        obstacle_approaching = fl.Term('obstacle_relative_speed', 'approaching', fl.PiecewiseMembership(membership_points['obstacle_relative_speed']['approaching']))
+        obstacle_static = fl.Term('obstacle_relative_speed', 'constant', fl.PiecewiseMembership(membership_points['obstacle_relative_speed']['constant']))
+        obstacle_moving_away = fl.Term('obstacle_relative_speed', 'moving_away', fl.PiecewiseMembership(membership_points['obstacle_relative_speed']['moving_away']))
 
-        car_break_hard = fl.Term('car_acceleration', 'break_hard', fl.TrapezoidalMembership(None, -deceleration_max, -deceleration_max * 2/3, -deceleration_max * 1/3))
-        car_break = fl.Term('car_acceleration', 'break', fl.TrapezoidalMembership(-deceleration_max * 2/3, -deceleration_max * 1/3, -acceleration_maintain_fuzzy, 0.0))
-        car_maintain = fl.Term('car_acceleration', 'maintain', fl.TriangularMembership(-acceleration_maintain_fuzzy, 0.0, acceleration_maintain_fuzzy))
-        car_accelerate = fl.Term('car_acceleration', 'accelerate', fl.TrapezoidalMembership(0.0, acceleration_maintain_fuzzy, acceleration_max * 1/3, acceleration_max * 2/3))
-        car_accelerate_hard = fl.Term('car_acceleration', 'accelerate_hard', fl.TrapezoidalMembership(acceleration_max * 1/3, acceleration_max * 2/3, acceleration_max, None))
+        car_break_hard = fl.Term('car_acceleration', 'break_hard', fl.PiecewiseMembership(membership_points['car_acceleration']['break_hard']))
+        car_break = fl.Term('car_acceleration', 'break', fl.PiecewiseMembership(membership_points['car_acceleration']['break']))
+        car_maintain = fl.Term('car_acceleration', 'maintain', fl.PiecewiseMembership(membership_points['car_acceleration']['maintain']))
+        car_accelerate = fl.Term('car_acceleration', 'accelerate', fl.PiecewiseMembership(membership_points['car_acceleration']['accelerate']))
+        car_accelerate_hard = fl.Term('car_acceleration', 'accelerate_hard', fl.PiecewiseMembership(membership_points['car_acceleration']['accelerate_hard']))
 
         self._system = fl.System(
             obstacle_approaching >> car_break,
